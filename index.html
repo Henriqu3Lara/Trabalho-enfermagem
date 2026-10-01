@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEP - Prontuário Eletrônico</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- LOGIN -->
+<section id="loginScreen" class="auth">
+  <div class="auth-side">
+    <div class="logo">✚</div>
+    <h1>Prontuário Eletrônico</h1>
+    <p>Cuidado organizado. Informação protegida.</p>
+
+    <div class="auth-card">
+      <b>Gestão de prontuários</b>
+      <span>Cadastre pacientes, consulte históricos e registre atendimentos.</span>
+    </div>
+  </div>
+
+  <div class="auth-form">
+    <div class="box">
+      <h2>Bem-vindo(a)</h2>
+      <p>Entre com suas credenciais.</p>
+
+      <form id="loginForm">
+        <label>E-mail profissional</label>
+        <input id="loginEmail" type="email" required>
+
+        <label>Senha</label>
+        <input id="loginPassword" type="password" required>
+
+        <button class="btn blue full">Entrar</button>
+      </form>
+
+      <p class="center">
+        Ainda não possui cadastro?
+        <button class="link" id="showRegister">Criar conta</button>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CADASTRO -->
+<section id="registerScreen" class="auth hidden">
+
+  <div class="auth-side">
+    <div class="logo">✚</div>
+    <h1>Prontuário Eletrônico</h1>
+    <p>Crie seu acesso profissional.</p>
+  </div>
+
+  <div class="auth-form">
+    <div class="box">
+
+      <h2>Nova conta</h2>
+      <p>Cadastre o profissional que utilizará o sistema.</p>
+
+      <form id="registerForm">
+
+        <label>Nome completo</label>
+        <input id="regName" required>
+
+        <label>E-mail profissional</label>
+        <input id="regEmail" type="email" required>
+
+        <label>Senha</label>
+        <input id="regPass" type="password" minlength="4" required>
+
+        <label>Identificação profissional</label>
+        <input id="regId" placeholder="Ex.: COREN, CRM ou matrícula">
+
+        <button class="btn blue full">Cadastrar</button>
+
+      </form>
+
+      <p class="center">
+        Já possui uma conta?
+        <button class="link" id="showLogin">Voltar</button>
+      </p>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- SISTEMA -->
+<div id="app" class="hidden">
+
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="logo small">✚</div>
+
+      <div>
+        <b>Prontuário</b>
+        <small>ELETRÔNICO</small>
+      </div>
+    </div>
+
+    <nav>
+
+      <button class="nav active" data-page="home">
+        ⌂ <span>Início</span>
+      </button>
+
+      <button class="nav" data-page="create">
+        ＋ <span>Criar prontuário</span>
+      </button>
+
+      <button class="nav" data-page="history">
+        ▤ <span>Histórico</span>
+      </button>
+
+      <button class="nav" data-page="yellow">
+        ♡ <span>Setembro Amarelo</span>
+      </button>
+
+    </nav>
+
+    <div class="side-user">
+      <div id="avatar" class="avatar">PE</div>
+
+      <div>
+        <b id="sideName">Profissional</b>
+        <small>Profissional de saúde</small>
+      </div>
+    </div>
+
+  </aside>
+
+  <main class="main">
+
+    <header>
+      <strong class="mobile-logo">PEP</strong>
+      <span id="topName"></span>
+      <button id="logout" class="logout">Sair</button>
+    </header>
+
+    <!-- HOME -->
+    <section id="homePage" class="page">
+
+      <div class="heading">
+
+        <div>
+          <small>VISÃO GERAL</small>
+
+          <h1>
+            Bem-vindo de volta,
+            <span id="homeName"></span>.
+          </h1>
+
+          <p>Gerencie os prontuários dos pacientes.</p>
+        </div>
+
+      </div>
+
+      <div class="stats">
+
+        <div>
+          <span>Pacientes cadastrados</span>
+          <b id="statPatients">0</b>
+          <small>Registros armazenados</small>
+        </div>
+
+        <div>
+          <span>Prontuários</span>
+          <b id="statRecords">0</b>
+          <small>Registros no sistema</small>
+        </div>
+
+        <div>
+          <span>Última atividade</span>
+          <b id="statLast">—</b>
+          <small>Atualização mais recente</small>
+        </div>
+
+      </div>
+
+      <div class="home-grid">
+
+        <div class="panel">
+
+          <div class="panel-title">
+            <h2>Acesso rápido</h2>
+          </div>
+
+          <div class="quick">
+
+            <button data-go="create">
+              <i>＋</i>
+              <b>Criar prontuário</b>
+              <small>Novo registro de paciente</small>
+            </button>
+
+            <button data-go="history">
+              <i>▤</i>
+              <b>Histórico</b>
+              <small>Consultar prontuários</small>
+            </button>
+
+            <button data-go="yellow">
+              <i>♡</i>
+              <b>Setembro Amarelo</b>
+              <small>Conteúdos de apoio</small>
+            </button>
+
+            <button data-go="history">
+              <i>✎</i>
+              <b>Editar prontuário</b>
+              <small>Acesse pelo histórico</small>
+            </button>
+
+          </div>
+
+          <button class="mental" data-go="assessment">
+
+            <i>♡</i>
+
+            <span>
+              <b>Avaliação rápida de saúde mental</b>
+              <small>
+                Uma reflexão inicial sobre como você está.
+              </small>
+            </span>
+
+            ›
+
+          </button>
+
+        </div>
+
+        <div class="panel">
+
+          <div class="panel-title">
+            <h2>Atividade recente</h2>
+          </div>
+
+          <div id="activities">
+            <div class="empty">
+              Nenhuma atividade.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CRIAÇÃO DE PRONTUÁRIO -->
+    <section id="createPage" class="page">
+
+      <div class="heading">
+
+        <div>
+
+          <small id="formMode">
+            NOVO REGISTRO
+          </small>
+
+          <h1 id="formTitle">
+            Criar prontuário
+          </h1>
+
+          <p>
+            Preencha os dados conforme o prontuário.
+          </p>
+
+        </div>
+
+        <button class="btn white" data-go="history">
+          Voltar
+        </button>
+
+      </div>
+
+      <form id="recordForm">
+
+        <input id="editId" type="hidden">
+
+        <!-- IDENTIFICAÇÃO -->
+        <div class="section">
+
+          <h2>1. Identificação do paciente</h2>
+
+          <div class="grid">
+
+            <label class="wide">
+              Nome completo
+              <input id="nome" required>
+            </label>
+
+            <label>
+              CPF
+              <input id="cpf">
+            </label>
+
+            <label>
+              Data de nascimento
+              <input id="nascimento" type="date">
+            </label>
+
+            <label>
+              Sexo
+
+              <select id="sexo">
+                <option></option>
+                <option>Feminino</option>
+                <option>Masculino</option>
+                <option>Outro</option>
+                <option>Não informado</option>
+              </select>
+
+            </label>
+
+            <label>
+              Telefone
+              <input id="telefone">
+            </label>
+
+            <label class="wide">
+              Endereço
+              <input id="endereco">
+            </label>
+
+            <label class="wide">
+              Nome do responsável
+              <input id="responsavel">
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- ATENDIMENTO -->
+        <div class="section">
+
+          <h2>2. Atendimento</h2>
+
+          <div class="grid">
+
+            <label>
+              Nº do prontuário
+              <input id="numero" readonly>
+            </label>
+
+            <label>
+              Data/horário
+              <input id="atendimento" type="datetime-local">
+            </label>
+
+            <label>
+              Unidade/setor
+              <input id="unidade">
+            </label>
+
+            <label>
+              Leito
+              <input id="leito">
+            </label>
+
+            <label class="wide">
+              Profissional responsável
+              <input id="profissional" readonly>
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- HISTÓRICO -->
+        <div class="section">
+
+          <h2>3. Histórico</h2>
+
+          <div class="grid">
+
+            <label class="wide">
+              Queixa principal
+              <textarea id="queixa"></textarea>
+            </label>
+
+            <label class="wide">
+              História da doença atual
+              <textarea id="historia"></textarea>
+            </label>
+
+            <label class="wide">
+              Antecedentes pessoais
+              <textarea id="antecedentes"></textarea>
+            </label>
+
+            <label class="wide">
+              Alergias
+              <textarea id="alergias"></textarea>
+            </label>
+
+            <label class="wide">
+              Medicamentos em uso
+              <textarea id="medUso"></textarea>
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- SINAIS VITAIS -->
+        <div class="section">
+
+          <h2>4. Sinais vitais</h2>
+
+          <div class="grid vitals">
+
+            <label>
+              Data/Hora
+              <input id="vitalHora" type="datetime-local">
+            </label>
+
+            <label>
+              PA
+              <input id="pa">
+            </label>
+
+            <label>
+              FC
+              <input id="fc">
+            </label>
+
+            <label>
+              FR
+              <input id="fr">
+            </label>
+
+            <label>
+              Temperatura
+              <input id="temp">
+            </label>
+
+            <label>
+              SpO₂
+              <input id="spo2">
+            </label>
+
+            <label>
+              Dor
+              <input id="dor">
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- AVALIAÇÃO -->
+        <div class="section">
+
+          <h2>5. Avaliação de enfermagem</h2>
+
+          <div class="grid">
+
+            <label>
+              Estado geral
+              <input id="estado">
+            </label>
+
+            <label>
+              Nível de consciência
+              <input id="consciencia">
+            </label>
+
+            <label>
+              Respiração
+              <input id="respiracao">
+            </label>
+
+            <label>
+              Pele
+              <input id="pele">
+            </label>
+
+            <label>
+              Alimentação
+              <input id="alimentacao">
+            </label>
+
+            <label>
+              Eliminação
+              <input id="eliminacao">
+            </label>
+
+            <label>
+              Mobilidade
+              <input id="mobilidade">
+            </label>
+
+            <label>
+              Acesso venoso
+              <input id="acesso">
+            </label>
+
+            <label class="wide">
+              Outros
+              <textarea id="outrosAval"></textarea>
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- MEDICAÇÕES -->
+        <div class="section">
+
+          <h2>6. Prescrição/medicações</h2>
+
+          <div class="grid">
+
+            <label>
+              Medicamento
+              <input id="medicamento">
+            </label>
+
+            <label>
+              Dose
+              <input id="dose">
+            </label>
+
+            <label>
+              Via
+              <input id="via">
+            </label>
+
+            <label>
+              Horário
+              <input id="horario">
+            </label>
+
+            <label class="wide">
+              Administrado por
+              <input id="administrado">
+            </label>
+
+            <label class="wide">
+              Observações
+              <textarea id="obsMed"></textarea>
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- PROCEDIMENTOS -->
+        <div class="section">
+
+          <h2>7. Procedimentos realizados</h2>
+
+          <div class="checks">
+
+            <label>
+              <input type="checkbox" value="Punção venosa">
+              Punção venosa
+            </label>
+
+            <label>
+              <input type="checkbox" value="Curativo">
+              Curativo
+            </label>
+
+            <label>
+              <input type="checkbox" value="Administração de medicamento">
+              Administração de medicamento
+            </label>
+
+            <label>
+              <input type="checkbox" value="Coleta de exames">
+              Coleta de exames
+            </label>
+
+            <label>
+              <input type="checkbox" value="Higiene">
+              Higiene
+            </label>
+
+            <label>
+              <input type="checkbox" value="Verificação de sinais vitais">
+              Verificação de sinais vitais
+            </label>
+
+          </div>
+
+          <label>
+            Outros
+            <input id="outrosProc">
+          </label>
+
+        </div>
+
+        <!-- EVOLUÇÃO -->
+        <div class="section">
+
+          <h2>8. Anotação/Evolução de enfermagem</h2>
+
+          <div class="grid">
+
+            <label>
+              Data e horário
+              <input id="evolucaoHora" type="datetime-local">
+            </label>
+
+            <label class="wide">
+              Observações/cuidados realizados
+              <textarea id="cuidados"></textarea>
+            </label>
+
+            <label class="wide">
+              Resposta do paciente/intercorrências
+              <textarea id="resposta"></textarea>
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- EXAMES -->
+        <div class="section">
+
+          <h2>9. Exames</h2>
+
+          <div class="grid">
+
+            <label>
+              Tipo de exame
+              <input id="tipoExame">
+            </label>
+
+            <label>
+              Data
+              <input id="dataExame" type="date">
+            </label>
+
+            <label class="wide">
+              Resultado
+              <textarea id="resultado"></textarea>
+            </label>
+
+            <label class="wide">
+              Observações
+              <textarea id="obsExame"></textarea>
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- ALTA -->
+        <div class="section">
+
+          <h2>10. Alta/Transferência</h2>
+
+          <div class="grid">
+
+            <label>
+              Data e horário
+              <input id="altaHora" type="datetime-local">
+            </label>
+
+            <label>
+              Condição do paciente
+              <input id="condicao">
+            </label>
+
+            <label class="wide">
+              Orientações
+              <textarea id="orientacoes"></textarea>
+            </label>
+
+            <label class="wide">
+              Destino
+              <input id="destino">
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- RESUMO -->
+        <div class="section summary">
+
+          <h2>Resumo automático do prontuário</h2>
+
+          <p>
+            O resumo é criado a partir dos campos preenchidos e pode ser editado manualmente.
+          </p>
+
+          <button type="button" class="btn white" id="makeSummary">
+            Atualizar resumo
+          </button>
+
+          <textarea
+            id="resumo"
+            placeholder="Resumo do prontuário..."
+          ></textarea>
+
+        </div>
+
+        <div class="actions">
+
+          <button
+            type="button"
+            class="btn white"
+            data-go="history"
+          >
+            Cancelar
+          </button>
+
+          <button class="btn blue">
+            Salvar prontuário
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+    <!-- HISTÓRICO -->
+    <section id="historyPage" class="page">
+
+      <div class="heading">
+
+        <div>
+
+          <small>CONSULTA</small>
+
+          <h1>
+            Histórico de prontuários
+          </h1>
+
+          <p>
+            Consulte e edite os registros cadastrados.
+          </p>
+
+        </div>
+
+        <button class="btn blue" data-go="create">
+          ＋ Novo prontuário
+        </button>
+
+      </div>
+
+      <div class="search">
+        <input
+          id="search"
+          placeholder="Buscar por nome, CPF ou número do prontuário..."
+        >
+      </div>
+
+      <div id="historyList"></div>
+
+    </section>
+
+    <!-- SETEMBRO AMARELO -->
+    <section id="yellowPage" class="page">
+
+      <div class="yellow-hero">
+
+        <div>
+
+          <small>
+            CUIDADO E ACOLHIMENTO
+          </small>
+
+          <h1>
+            Sua saúde mental<br>
+            também merece atenção.
+          </h1>
+
+          <p>
+            Informação, escuta e apoio podem fazer diferença.
+          </p>
+
+          <button
+            class="btn yellow"
+            data-go="assessment"
+          >
+            Fazer avaliação rápida
+          </button>
+
+        </div>
+
+        <div class="ribbon">
+          ◆
+        </div>
+
+      </div>
+
+      <h2 class="content-title">
+        Conteúdos de apoio
+      </h2>
+
+      <p class="muted">
+        Informações gerais para promover acolhimento e bem-estar.
+      </p>
+
+      <div class="support">
+
+        <article>
+          <i>♡</i>
+
+          <h3>
+            Reconheça seus sentimentos
+          </h3>
+
+          <p>
+            Perceber como você está se sentindo é um primeiro passo para buscar apoio.
+          </p>
+        </article>
+
+        <article>
+          <i>☻</i>
+
+          <h3>
+            Converse com alguém
+          </h3>
+
+          <p>
+            Compartilhar o que sente com uma pessoa de confiança pode ajudar.
+          </p>
+        </article>
+
+        <article>
+          <i>＋</i>
+
+          <h3>
+            Procure apoio profissional
+          </h3>
+
+          <p>
+            Um profissional de saúde pode orientar você de forma individualizada.
+          </p>
+        </article>
+
+      </div>
+
+      <div class="cvv">
+
+        <b>
+          Precisa conversar com alguém agora?
+        </b>
+
+        <span>
+          O CVV atende gratuitamente pelo 188, 24 horas por dia.
+        </span>
+
+      </div>
+
+    </section>
+
+    <!-- AVALIAÇÃO -->
+    <section id="assessmentPage" class="page">
+
+      <div class="heading">
+
+        <div>
+
+          <small>
+            SETEMBRO AMARELO
+          </small>
+
+          <h1>
+            Avaliação rápida de saúde mental
+          </h1>
+
+          <p>
+            Reflexão inicial; não substitui avaliação profissional.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="assessment">
+
+        <div class="bar">
+          <span id="bar"></span>
+        </div>
+
+        <small id="qnum">
+          1 de 5
+        </small>
+
+        <h2 id="question"></h2>
+
+        <div id="answers"></div>
+
+        <div class="actions">
+
+          <button id="prev" class="btn white">
+            Anterior
+          </button>
+
+          <button id="next" class="btn blue">
+            Próxima
+          </button>
+
+        </div>
+
+        <div id="result" class="result hidden"></div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
